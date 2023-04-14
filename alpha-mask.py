@@ -4,10 +4,13 @@ import numpy as np
 if __name__ == "__main__":
 
     im = cv2.imread("images/moire-alpha-mask.jpg", cv2.IMREAD_GRAYSCALE)
-    im = im > 0.5
-    im.astype(float)
+    im = np.where(im > 256/2, 255, 0)
     im = np.array([im] * 4)
     
+    im = np.moveaxis(im, [0], [2])
 
-    print(im.shape)
+    bw = im[:,:,0]
+    im[:,:,3] = np.where(bw == 0, 255, 0)
+    
     cv2.imwrite("out/test.png", im)
+    print("done")
